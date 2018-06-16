@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 )
 
 type fileHandler struct {
@@ -18,9 +19,18 @@ func (handler fileHandler) ServeHTTP(writer http.ResponseWriter, req *http.Reque
 
 func main() {
 	port := flag.String("port", "4000", "port number")
-	path := flag.String("path", ".", "directory to serve")
+	path := flag.String("path", "", "directory to serve")
 
 	flag.Parse()
+
+	if *path == "" {
+		var err error
+		*path, err = os.Getwd()
+
+		if err != nil {
+			log.Fatalln("Failed to get the current working directory")
+		}
+	}
 
 	fileServer := http.FileServer(http.Dir(*path))
 
