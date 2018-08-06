@@ -13,7 +13,7 @@ type fileHandler struct {
 }
 
 func (handler fileHandler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
-	log.Println(req.Method, handler.cwd+req.URL.String())
+	log.Println(req.RemoteAddr, "accessed", handler.cwd+req.URL.String(), "using", req.Method)
 	handler.fsHandler.ServeHTTP(writer, req)
 }
 
